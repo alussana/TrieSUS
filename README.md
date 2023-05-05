@@ -1,8 +1,8 @@
 # TrieSUS
 
-## Find the Smallest Unique Subsets (SUS).
+## Find the Smallest Unique Subsets (SUS)
 
-`TrieSUS` solves the following problem: given a collection of sets, map each set to the smallest possible combination of its elements that uniqly identifies the set
+`TrieSUS` solves the following problem: given a collection of sets, map each set to the smallest possible combination of its elements that uniquely identifies the set.
 
 ## Example
 
@@ -51,4 +51,4 @@ The same problem also appears in this other [StackExchange question](https://mat
 
 ## Limitations
 
-When multiple SUSs exist for a set, only the solution containing elements occurring with the lowest frequency in the collection is reported
+When multiple SUSs exist for a set, only the solution containing elements occurring with the lowest frequency in the collection is reported.
