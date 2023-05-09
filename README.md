@@ -56,69 +56,6 @@ The function that returns a SUS is described below, and it corresponds to `Trie.
     * `parent`: the parent node of the node in the prefix tree
 * `end_node_for_word`: function that takes in input a `word` and a `trie`, and returns the node that marks the end of that word in the prefix tree.
 
-```
-FUNCTION find_sus(word, trie)
-    sus = []
-    word_end_node = end_node_for_word(word, trie)
-    other_end_nodes = []
-    FOR node IN trie.end_nodes
-        IF node != word_end_node
-            APPEND node TO other_end_nodes
-    IF length of word_end_node.children != 0
-        RETURN []
-    APPEND word_end_node.symbol TO sus
-    FOR end_node IN other_end_nodes
-        current_word_node = word_end_node
-        current_trie_node = end_node
-        WHILE symbol_ranks[current_trie_node.symbol] >= symbol_ranks[current_word_node.symbol]
-            IF current_trie_node.symbol == current_word_node.symbol
-                IF current_word_node.parent.parent == None
-                    RETURN []
-                ELSE
-                    current_word_node = current_word_node.parent
-                    IF current_word_node.symbol NOT IN sus
-                        APPEND current_word_node.symbol TO sus
-            IF current_trie_node.parent.parent != None
-                current_trie_node = current_trie_node.parent
-            ELSE
-                BREAK
-    RETURN sus
-```
-
-```{bash}
-FUNCTION find_sus(word, trie)
-    sus = []                                    # Initialize empty list to 
-                                                # store SUS
-    word_end_node = end_node_for_word(word)     # Get the node marking the end
-                                                # of the given word
-    other_end_nodes = []                        # Get a list of nodes marking
-    FOR node IN trie.end_nodes                  #   the end of the other words
-        IF node != word_end_node                #   .
-            APPEND node TO other_end_nodes      #   .
-    IF length of word_end_node.children != 0    # If word_end_node has children,
-        RETURN []                               # children, then we know that
-                                                # the SUS doesn't exist
-    APPEND word_end_node.symbol TO sus          # The item with the greatest
-                                                # rank in the set will be in
-                                                # the SUS
-    FOR end_node IN other_end_nodes                             # Iterate through each node in other_end_nodes
-        current_word_node = word_end_node # Set current_word_node to word_end_node
-        current_trie_node = end_node # Set current_trie_node to the current end_node
-        WHILE symbol_ranks[current_trie_node.symbol] >= symbol_ranks[current_word_node.symbol] # Compare the symbol ranks of current_trie_node and current_word_node
-            IF current_trie_node.symbol == current_word_node.symbol # Check if the symbols are the same
-                IF current_word_node.parent.parent == None # Check if current_word_node's parent's parent is None, indicating the root
-                    RETURN [] # Return an empty list since the word has reached the root and is not a valid word
-                ELSE
-                    current_word_node = current_word_node.parent # Move up to the parent node
-                    IF current_word_node.symbol NOT IN sus # Check if the symbol is not already in the sus list
-                        APPEND current_word_node.symbol TO sus # Add the symbol to the sus list
-            IF current_trie_node.parent.parent != None # Check if current_trie_node has a parent's parent
-                current_trie_node = current_trie_node.parent # Move up to the parent node
-            ELSE
-                BREAK # Exit the while loop
-    RETURN sus # Return the list of suspicious symbols
-```
-
 ```{bash}
 FUNCTION find_sus(word, trie)
     sus = []                                                          # Initialize empty list to store SUS
