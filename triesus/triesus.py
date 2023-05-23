@@ -2,7 +2,7 @@
 
 # Alessandro Lussana <alussana@ebi.ac.uk>
 
-from trienode import *
+from triesus.trienode import *
     
 class TrieSUS:
     def __init__(self, symbol_ranks: dict):

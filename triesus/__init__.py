@@ -1,5 +1,5 @@
 """
-TrieCell
+TrieSUS
 
 Find the Smallest Unique Subset (SUS)
 """

@@ -4,6 +4,16 @@
 
 Given a collection of sets, `TrieSUS` maps each set to the smallest possible combination of its elements that uniquely identifies the set.
 
+For more details about the algorithmic problem and its solution, see the [Algorithm](#algorithm) section.
+
+## Installation
+
+TrieSUS is on the [Python Package Index](https://pypi.org) and can be installed with [pip](https://pip.pypa.io/en/stable/):
+
+```
+pip install triesus
+```
+
 ## Example
 
 Consider the following collection of sets (the first field denotes the set id, the following fields are elements of the set. Fields are tab-separated):
@@ -15,7 +25,7 @@ Consider the following collection of sets (the first field denotes the set id, t
 4       A       D
 ```
 
-The Smallest Unique Subset (SUS) for each set in this collection can be found running `./triesus.py examples/sets2.tsv`
+The Smallest Unique Subset (SUS) for each set in this collection can be found running `triesus examples/sets2.tsv`
 
 ```
 1       C
@@ -85,6 +95,6 @@ FUNCTION find_sus(word, trie)
     RETURN sus                                                        # Return the SUS
 ```
 
-## Limitations
+### Limitations
 
 When multiple SUSs exist for a set, only the solution containing elements occurring with the lowest frequency in the collection is reported.

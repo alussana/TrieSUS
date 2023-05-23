@@ -2,8 +2,8 @@
 
 # Alessandro Lussana <alussana@ebi.ac.uk>
 
-from preprocessing import *
-from triesus import *
+from triesus.preprocessing import *
+from triesus.triesus import *
     
 def run_triesus(collection_tsv: str) -> None:
     collection_dict = read_collection(collection_tsv)
@@ -19,10 +19,3 @@ def run_triesus(collection_tsv: str) -> None:
         sus = triesus.find_sus(item)
         sus = '\t'.join(sus)
         print(f'{key}\t{sus}')
-
-def main():
-    import sys
-    run_triesus(sys.argv[1])
-        
-if __name__ == '__main__':
-    main()
