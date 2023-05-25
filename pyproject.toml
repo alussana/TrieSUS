@@ -1,22 +1,38 @@
 [project]
 name = "triesus"
 version = "0.1.0"
+description = "Find the Smallest Unique Subset (SUS)"
+readme = "README.md"
+keywords = ["sets", "algorithm", "trie", "cli"]
 authors = [
   { name="Alessandro Lussana", email="alessandro.lussana@proton.me" },
 ]
-description = "Find the Smallest Unique Subset (SUS)"
-readme = "README.md"
+maintainers = [
+  { name="Alessandro Lussana", email="alessandro.lussana@proton.me" },
+]
 requires-python = ">=3.7"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
+license = {file = "LICENSE"}
+dependencies = [
+    "requests",
+    'importlib-metadata; python_version<"3.8"',
+]
 
 [project.urls]
 "Homepage" = "https://github.com/alussana/TrieSUS"
 "Bug Tracker" = "https://github.com/alussana/TrieSUS/issues"
+"Source" = "https://github.com/alussana/TrieSUS/"
+
+[project.scripts]
+triesus = "triesus.cli:main"
+
+[description-file]
+file = "README.md"
 
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools", "setuptools-scm"]
 build-backend = "setuptools.build_meta"

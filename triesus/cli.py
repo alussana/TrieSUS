@@ -2,9 +2,8 @@
 
 # Alessandro Lussana <alussana@ebi.ac.uk>
 
-from triesus.run_triesus import run_triesus
-
 def main():
+    from triesus.run_triesus import run_triesus
     import sys
     run_triesus(sys.argv[1])
     

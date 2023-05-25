@@ -14,7 +14,7 @@ TrieSUS is on the [Python Package Index](https://pypi.org) and can be installed 
 pip install triesus
 ```
 
-## Example
+## Usage
 
 Consider the following collection of sets (the first field denotes the set id, the following fields are elements of the set. Fields are tab-separated):
 
@@ -25,7 +25,13 @@ Consider the following collection of sets (the first field denotes the set id, t
 4       A       D
 ```
 
-The Smallest Unique Subset (SUS) for each set in this collection can be found running `triesus examples/sets2.tsv`
+The Smallest Unique Subset (SUS) for each set in this collection can be found running 
+
+```
+triesus examples/sets2.tsv
+```
+
+which will print in `STDOUT`:
 
 ```
 1       C
