@@ -44,7 +44,7 @@ Note that the SUS for set `4` does not exist.
 
 ## Algorithm
 
-The algorithmic problem was discussed in this [StackOverflow question](https://stackoverflow.com/questions/63514798):
+The algorithmic problem that TrieSUS is intended to solve was discussed in this [StackOverflow question](https://stackoverflow.com/questions/63514798):
 
 > *[...]*
 > 
@@ -61,7 +61,7 @@ The same problem also appears in this other [StackExchange question](https://mat
 
 ### Pseudocode
 
-The function that returns a SUS is described below, and it corresponds to `Trie.find_sus()` in the codebase. It is assumed that the following relevant functions or data structures exist: 
+The function that returns a SUS is described below, and it corresponds to `Trie.find_sus()` in the codebase. It is assumed that the following relevant functions or data structures are available: 
 
 * `word`: list of strings. The items (symbols) of the set for which we want to find the smallest unique subset.
 * `symbol_ranks`: dictionary mapping each key to its corresponding rank. The item (symbol) occurring most frequently in the sets of the collection is given rank `1`.
