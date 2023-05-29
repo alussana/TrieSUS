@@ -2,7 +2,7 @@
 
 ## Find the Smallest Unique Subset (SUS)
 
-Given a collection of sets, `TrieSUS` maps each set to the smallest possible combination of its elements that uniquely identifies the set.
+Given a collection of sets, TrieSUS maps each set to the smallest possible combination of its elements that uniquely identifies the set.
 
 For more details about the algorithmic problem and its solution, see the [Algorithm](#algorithm) section.
 
