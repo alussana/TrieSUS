@@ -8,10 +8,19 @@ For more details about the algorithmic problem and its solution, see the [Algori
 
 ## Installation
 
+### PyPI
+
 TrieSUS is on the [Python Package Index](https://pypi.org) and can be installed with [pip](https://pip.pypa.io/en/stable/):
 
 ```
 pip install triesus
+```
+
+### From source
+
+```
+python -m build
+pip install dist/triesus-*.whl --force-reinstall
 ```
 
 ## Usage
@@ -28,7 +37,7 @@ Consider the following collection of sets (the first field denotes the set id, t
 The Smallest Unique Subset (SUS) for each set in this collection can be found running 
 
 ```
-triesus examples/sets2.tsv
+triesus tests/examples/sets2.tsv
 ```
 
 which will print in `STDOUT`:
@@ -61,7 +70,7 @@ The same problem also appears in this other [StackExchange question](https://mat
 
 ### Pseudocode
 
-The function that returns a SUS is described below, and it corresponds to `Trie.find_sus()` in the codebase. It is assumed that the following relevant functions or data structures are available: 
+The function that returns a SUS is described below, and it corresponds to `triesus.TrieSus.find_sus()` in the codebase. It is assumed that the following relevant functions or data structures are available: 
 
 * `word`: list of strings. The items (symbols) of the set for which we want to find the smallest unique subset.
 * `symbol_ranks`: dictionary mapping each key to its corresponding rank. The item (symbol) occurring most frequently in the sets of the collection is given rank `1`.
@@ -104,3 +113,8 @@ FUNCTION find_sus(word, trie)
 ### Limitations
 
 When multiple SUSs exist for a set, only the solution containing elements occurring with the lowest frequency in the collection is reported.
+
+## TODO
+
+- [ ] define imports as relative locations with "`.`"
+- [ ] add flag orgument to consider absence of items as informative, thus changing the behavior of the functions to read the input
