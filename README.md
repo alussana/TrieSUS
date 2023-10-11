@@ -117,4 +117,3 @@ When multiple SUSs exist for a set, only the solution containing elements occurr
 ## TODO
 
 - [ ] define imports as relative locations with "`.`"
-- [ ] add flag orgument to consider absence of items as informative, thus changing the behavior of the functions to read the input
