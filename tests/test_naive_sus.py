@@ -5,4 +5,4 @@
 from triesus.run_naive_sus import *
         
 if __name__ == '__main__':
-    run_naive_sus('tests/examples/test.tsv')
+    run_naive_sus('test.tsv')
