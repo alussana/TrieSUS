@@ -2,6 +2,7 @@
 
 # Alessandro Lussana <alussana@ebi.ac.uk>
 
+from triesus.input import *
 from triesus.preprocessing import *
 from triesus.triesus import *
     

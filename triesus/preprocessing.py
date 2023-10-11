@@ -2,15 +2,6 @@
 
 # Alessandro Lussana <alussana@ebi.ac.uk>
 
-def read_collection(file_tsv:str) -> dict:
-    with open(file_tsv) as file_fh:
-        collection_dict = {}
-        for line_str in file_fh:
-            fields_list = line_str.strip().split('\t')
-            set_id_str = fields_list.pop(0)
-            collection_dict[set_id_str] = fields_list
-    return collection_dict
-            
 def item_counts(collection_dict: dict) -> dict:
     item_list = []
     for key,item in collection_dict.items():
