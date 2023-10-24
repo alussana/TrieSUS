@@ -114,6 +114,10 @@ FUNCTION find_sus(word, trie)
 
 When multiple SUSs exist for a set, only the solution containing elements occurring with the lowest frequency in the collection is reported.
 
+The algorithm assumes that all sets are distinct.
+
+If there are two elements that appear the same number of times in the sets, then there is no guarantee that the algorithm will return the optimal solution, i.e. it will return unique subsets, but possibly not the smallest possible unique subsets
+
 ## TODO
 
 - [ ] define imports as relative locations with "`.`"

@@ -14,8 +14,6 @@ def random_sets(
     
     x = {}
     
-    keys = [i for i in range(n)]
-    
     elements = [str(i) for i in range(e)]
     
     for i in range(n):
