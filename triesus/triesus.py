@@ -1,70 +1,223 @@
 #!/usr/bin/env python3
 
-# Alessandro Lussana <alussana@ebi.ac.uk>
 
-from triesus.trienode import *
-    
-class TrieSUS:
-    def __init__(self, symbol_ranks: dict):
-        self.root = TrieNode()
-        self.end_nodes = []
-        self.symbol_ranks = symbol_ranks
-    def insert(self, word):
-        current = self.root
-        for letter in word:
-            if letter not in current.children:
-                current.children[letter] = TrieNode(parent=current, symbol=letter)
-            current = current.children[letter]
-        current.is_end_of_word = True
-        self.end_nodes.append(current)
-    def search(self, word):
-        current = self.root
-        for letter in word:
-            if letter not in current.children:
-                return False
-            current = current.children[letter]
-        return current.is_end_of_word
-    def starts_with(self, prefix):
-        current = self.root
-        for letter in prefix:
-            if letter not in current.children:
-                return False
-            current = current.children[letter]
-        return True
-    def end_node_for_word(self, word):
-        current = self.root
-        for letter in word:
-            if letter not in current.children:
-                return None
-            current = current.children[letter]
-        return current
-    def prefix_from_node(self, node):
-        prefix = []
-        current = node
-        while current.parent != None:
-            prefix.append(current.parent)
-            current = current.parent
+from collections import Counter
+from triesus.trie import *
+
+
+class TrieSUS(Trie):
+    def __init__(self, collection: dict):
+        super().__init__()
+        self.item_counts = self.get_item_counts(collection)
+        self.sorted_items = self.sort_keys_by_value(self.item_counts)
+        self.symbol_ranks = self.rank_dict_from_keys_list(self.sorted_items)
+        self.counts_to_symbols = self.reverse_mapping(self.item_counts)
+        self.collection = self.sort_collection_by_other_list_order(
+            collection, self.sorted_items
+        )
+        words = [item for key, item in self.collection.items()]
+        for word in words:
+            self.insert(word)
+
+    def reverse_mapping(self, A: dict) -> dict:
+        """Creates a new dictionary B from an existing dictionary A with values as keys and list of corresponding keys as values.
+
+        Args:
+            A: A dictionary where different keys are mapped to different values. All keys are different but some values can be the same.
+
+        Returns:
+            A new dictionary B where the keys are the values of dictionary A, and the values are the list of corresponding keys in dictionary A.
+        """
+
+        B = {}
+
+        for key, value in A.items():
+            if value not in B:
+                B[value] = set()
+
+            B[value].add(key)
+
+        return B
+
+    def get_item_counts(self, collection: dict) -> dict:
+        item_list = []
+        for key, item in collection.items():
+            item_list = item_list + item
+        item_count_dict = {}
+        for item_str in item_list:
+            if item_str in item_count_dict:
+                item_count_dict[item_str] += 1
+            else:
+                item_count_dict[item_str] = 1
+        return item_count_dict
+
+    def find_most_frequent_item(self, list_of_sets):
+        """Returns the item that appears most frequently in a list of sets.
+
+        Args:
+          set_list: A list of sets.
+
+        Returns:
+          The item that appears most frequently in the sets, or None if the list is empty.
+        """
+
+        # Create a counter object to track the frequency of each item.
+        counter = Counter()
+        for set in list_of_sets:
+            for item in set:
+                counter[item] += 1
+
+        most_frequent_item = counter.most_common(1)[0][0]
+
+        return most_frequent_item
+
+    def sort_keys_by_value(self, dict_obj: dict) -> list:
+        items = list(dict_obj.items())
+        items.sort(key=lambda x: x[1], reverse=True)
+        sorted_keys = [item[0] for item in items]
+        return sorted_keys
+
+    def rank_dict_from_keys_list(self, keys_list: list):
+        rank_dict = {}
+        for i, key in enumerate(keys_list):
+            rank_dict[key] = i + 1
+        return rank_dict
+
+    def sort_list_by_other_list_order(self, my_list: list, other_list: list) -> list:
+        item_to_index = {
+            item: other_list.index(item) for item in my_list if item in other_list
+        }
+        sorted_list = sorted(
+            my_list, key=lambda x: item_to_index.get(x, len(other_list))
+        )
+        return sorted_list
+
+    def sort_collection_by_other_list_order(
+        self, collection_dict: dict, sorted_items_list: list
+    ) -> dict:
+        for key in collection_dict.keys():
+            collection_dict[key] = self.sort_list_by_other_list_order(
+                collection_dict[key], sorted_items_list
+            )
+        return collection_dict
+
+    def get_symbols_with_same_rank(self, symbol: str) -> set:
+        return self.counts_to_symbols[self.item_counts[symbol]]
+
+    def get_prefix_symbols(self, node: TrieNode):
+        prefix = [node.symbol]
+        prefix = prefix + [x.symbol for x in self.prefix_from_node(node)]
+        prefix = prefix[:-1]
+        prefix = list(reversed(prefix))
         return prefix
+
     def find_sus(self, word):
-        sus = []
         word_end_node = self.end_node_for_word(word)
         other_end_nodes = [node for node in self.end_nodes if node != word_end_node]
-        if len(word_end_node.children) != 0:
+
+        if len(word_end_node.children) != 0 or word_end_node.words_ending_here > 1:
+            # if word_end_node has children, or there is an identical word,
+            # the SUS doesn't exist, terminate here
             return []
-        sus.append(word_end_node.symbol)
+
+        sus_with_candidate_symbols = []  # list of sets
+
         for end_node in other_end_nodes:
             current_word_node = word_end_node
             current_trie_node = end_node
-            while self.symbol_ranks[current_trie_node.symbol] >= self.symbol_ranks[current_word_node.symbol]:
-                if current_trie_node.symbol == current_word_node.symbol:
+            
+            candidate_sus_symbols_from_word = False # keep track of whether sus items have been added from the current trie word
+
+            while (
+                self.item_counts[current_trie_node.symbol]
+                <= self.item_counts[current_word_node.symbol]
+            ):
+                candidate_sus_symbols = self.get_symbols_with_same_rank(
+                    current_word_node.symbol
+                )
+                current_prefix = self.get_prefix_symbols(current_word_node)
+                candidate_sus_symbols = candidate_sus_symbols.intersection(
+                    set(current_prefix)
+                )
+
+                candidate_sus_filter = self.get_symbols_with_same_rank(
+                    current_trie_node.symbol
+                )
+                other_prefix = self.get_prefix_symbols(current_trie_node)
+                candidate_sus_filter = candidate_sus_filter.intersection(
+                    set(other_prefix)
+                )
+
+                candidate_sus_symbols_filtered = candidate_sus_symbols.difference(
+                    candidate_sus_filter
+                )
+
+                if len(candidate_sus_symbols_filtered) == 0:
                     if current_word_node.parent.parent == None:
                         return []
                     else:
                         current_word_node = current_word_node.parent
-                        if current_word_node.symbol not in sus:
-                            sus.append(current_word_node.symbol)
+                else:
+                    sus_with_candidate_symbols.append(candidate_sus_symbols_filtered)
+                    candidate_sus_symbols_from_word = True
+
                 if current_trie_node.parent.parent != None:
                     current_trie_node = current_trie_node.parent
                 else:
-                    break   
-        return sus
+                    break
+                
+            if (
+                self.item_counts[current_trie_node.symbol]
+                > self.item_counts[current_word_node.symbol]
+                or candidate_sus_symbols_from_word == False
+            ):
+                candidate_sus_symbols = self.get_symbols_with_same_rank(
+                    current_word_node.symbol
+                )
+                current_prefix = self.get_prefix_symbols(current_word_node)
+                candidate_sus_symbols = candidate_sus_symbols.intersection(
+                    set(current_prefix)
+                )
+                sus_with_candidate_symbols.append(candidate_sus_symbols)
+                candidate_sus_symbols_from_word = True
+
+        items_to_include_in_sus = set(
+            [list(i)[0] for i in sus_with_candidate_symbols if len(i) == 1]
+        )
+        items_w_alternative_choices = [
+            i for i in sus_with_candidate_symbols if len(i) > 1
+        ]
+        j = 0
+        for i in range(len(items_w_alternative_choices)):
+            if (
+                len(
+                    items_w_alternative_choices[i - j].intersection(
+                        items_to_include_in_sus
+                    )
+                )
+                > 0
+            ):
+                items_w_alternative_choices.pop(i - j)
+                j = j + 1
+        # rank item in items_w_alternative_choices by frequency
+        # add the most frequent to items_to_include_in_sus
+        # discard all sets in items_w_alternative_choices that have that item
+        # repeat: rank, add, discard, until no more items_w_alternative_choices
+        while len(items_w_alternative_choices) != 0:
+            item = self.find_most_frequent_item(items_w_alternative_choices)
+            items_to_include_in_sus.add(item)
+            j = 0
+            for i in range(len(items_w_alternative_choices)):
+                if item in items_w_alternative_choices[i - j]:
+                    items_w_alternative_choices.pop(i - j)
+                    j = j + 1
+
+        return list(items_to_include_in_sus)
+
+    def has_sus(self, word):
+        # TODO
+        word_end_node = self.end_node_for_word(word)
+        if len(word_end_node.children) != 0:
+            return False
+        else:
+            return True

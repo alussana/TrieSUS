@@ -1,9 +1,9 @@
 """
 TrieSUS
 
-Find the Smallest Unique Subset (SUS)
+Find the Smallest Unique Subsets (SUS) given a collection of sets
 """
 
-__version__ = "0.1.4"
-__author__ = 'Alessandro Lussana <alessandro.lussana@proton.me>'
-__credits__ = 'European Bioinformatics Institute (EMBL-EBI)'
+__version__ = "0.2.0"
+__author__ = "Alessandro Lussana <alessandro.lussana@proton.me>"
+__credits__ = "European Bioinformatics Institute (EMBL-EBI)"

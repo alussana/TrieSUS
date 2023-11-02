@@ -68,7 +68,7 @@ This procedure is repeated for every set in the collection.
 
 The same problem also appears in this other [StackExchange question](https://math.stackexchange.com/questions/2436161), where no answer was given at the time of writing.
 
-### Pseudocode
+### Pseudocode [outdated]
 
 The function that returns a SUS is described below, and it corresponds to `triesus.TrieSus.find_sus()` in the codebase. It is assumed that the following relevant functions or data structures are available: 
 
@@ -110,14 +110,8 @@ FUNCTION find_sus(word, trie)
     RETURN sus                                                        # Return the SUS
 ```
 
-### Limitations
-
-When multiple SUSs exist for a set, only the solution containing elements occurring with the lowest frequency in the collection is reported.
-
-The algorithm assumes that all sets are distinct.
-
-If there are two elements that appear the same number of times in the sets, then there is no guarantee that the algorithm will return the optimal solution, i.e. it will return unique subsets, but possibly not the smallest possible unique subsets
-
 ## TODO
 
+- [ ] update pseudocode section
+- [ ] add benchmark
 - [ ] define imports as relative locations with "`.`"
