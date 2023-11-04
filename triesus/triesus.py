@@ -101,15 +101,29 @@ class TrieSUS(Trie):
             )
         return collection_dict
 
-    def get_symbols_with_same_rank(self, symbol: str) -> set:
-        return self.counts_to_symbols[self.item_counts[symbol]]
-
     def get_prefix_symbols(self, node: TrieNode):
         prefix = [node.symbol]
         prefix = prefix + [x.symbol for x in self.prefix_from_node(node)]
         prefix = prefix[:-1]
         prefix = list(reversed(prefix))
         return prefix
+
+    def get_common_ancestor(self, node_a, node_b):
+        a_nodes = {node_a}
+        node = node_a
+        while node != self.root:
+            node = node.parent
+            a_nodes.add(node)
+
+        node = node_b
+        found = False
+        while found == False:
+            if node in a_nodes:
+                found = True
+            else:
+                node = node.parent
+
+        return node
 
     def find_sus(self, word):
         word_end_node = self.end_node_for_word(word)
@@ -124,62 +138,24 @@ class TrieSUS(Trie):
 
         for end_node in other_end_nodes:
             current_word_node = word_end_node
-            current_trie_node = end_node
-            
-            candidate_sus_symbols_from_word = False # keep track of whether sus items have been added from the current trie word
 
-            while (
-                self.item_counts[current_trie_node.symbol]
-                <= self.item_counts[current_word_node.symbol]
-            ):
-                candidate_sus_symbols = self.get_symbols_with_same_rank(
-                    current_word_node.symbol
-                )
-                current_prefix = self.get_prefix_symbols(current_word_node)
-                candidate_sus_symbols = candidate_sus_symbols.intersection(
-                    set(current_prefix)
-                )
+            unique_items = set()
 
-                candidate_sus_filter = self.get_symbols_with_same_rank(
-                    current_trie_node.symbol
-                )
-                other_prefix = self.get_prefix_symbols(current_trie_node)
-                candidate_sus_filter = candidate_sus_filter.intersection(
-                    set(other_prefix)
-                )
+            trie_word = set(self.get_prefix_symbols(end_node))
 
-                candidate_sus_symbols_filtered = candidate_sus_symbols.difference(
-                    candidate_sus_filter
-                )
+            # determine where the two words intersect in the trie
+            common_ancestor_node = self.get_common_ancestor(word_end_node, end_node)
 
-                if len(candidate_sus_symbols_filtered) == 0:
-                    if current_word_node.parent.parent == None:
-                        return []
-                    else:
-                        current_word_node = current_word_node.parent
-                else:
-                    sus_with_candidate_symbols.append(candidate_sus_symbols_filtered)
-                    candidate_sus_symbols_from_word = True
+            while current_word_node != common_ancestor_node:
+                if current_word_node.symbol not in trie_word:
+                    unique_items.add(current_word_node.symbol)
 
-                if current_trie_node.parent.parent != None:
-                    current_trie_node = current_trie_node.parent
-                else:
-                    break
-                
-            if (
-                self.item_counts[current_trie_node.symbol]
-                > self.item_counts[current_word_node.symbol]
-                or candidate_sus_symbols_from_word == False
-            ):
-                candidate_sus_symbols = self.get_symbols_with_same_rank(
-                    current_word_node.symbol
-                )
-                current_prefix = self.get_prefix_symbols(current_word_node)
-                candidate_sus_symbols = candidate_sus_symbols.intersection(
-                    set(current_prefix)
-                )
-                sus_with_candidate_symbols.append(candidate_sus_symbols)
-                candidate_sus_symbols_from_word = True
+                current_word_node = current_word_node.parent
+
+            if len(unique_items) == 0:
+                return []
+
+            sus_with_candidate_symbols.append(unique_items)
 
         items_to_include_in_sus = set(
             [list(i)[0] for i in sus_with_candidate_symbols if len(i) == 1]
@@ -213,11 +189,3 @@ class TrieSUS(Trie):
                     j = j + 1
 
         return list(items_to_include_in_sus)
-
-    def has_sus(self, word):
-        # TODO
-        word_end_node = self.end_node_for_word(word)
-        if len(word_end_node.children) != 0:
-            return False
-        else:
-            return True

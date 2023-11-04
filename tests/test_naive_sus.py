@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-# Alessandro Lussana <alussana@ebi.ac.uk>
-
 from triesus.run_naive_sus import *
 
 if __name__ == "__main__":
@@ -11,5 +9,7 @@ if __name__ == "__main__":
     run_naive_sus("tests/examples/sets2.tsv")
     print('tests/examples/sets3.tsv')
     run_naive_sus("tests/examples/sets3.tsv")
-    print('tests/examples/6_6_6.tsv')
-    run_naive_sus("tests/examples/6_6_6.tsv")
+    print('tests/examples/sets4.tsv')
+    run_naive_sus("tests/examples/sets4.tsv")
+    print('tests/examples/sets5.tsv')
+    run_naive_sus("tests/examples/sets5.tsv")

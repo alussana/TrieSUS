@@ -2,7 +2,7 @@
 
 ## Find the Smallest Unique Subset (SUS)
 
-Given a collection of sets, TrieSUS maps each set to the smallest possible combination of its elements that uniquely identifies the set.
+Given a collection of sets, TrieSUS maps each set to the smallest possible combination of its elements that uniquely identifies the set, in linear time.
 
 For more details about the algorithmic problem and its solution, see the [Algorithm](#algorithm) section.
 
@@ -12,15 +12,21 @@ For more details about the algorithmic problem and its solution, see the [Algori
 
 TrieSUS is on the [Python Package Index](https://pypi.org) and can be installed with [pip](https://pip.pypa.io/en/stable/):
 
-```
+```bash
 pip install triesus
 ```
 
 ### From source
 
-```
+```bash
 python -m build
 pip install dist/triesus-*.whl --force-reinstall
+```
+
+### Development
+
+```bash
+pip install -e .
 ```
 
 ## Usage
@@ -68,7 +74,7 @@ This procedure is repeated for every set in the collection.
 
 The same problem also appears in this other [StackExchange question](https://math.stackexchange.com/questions/2436161), where no answer was given at the time of writing.
 
-### Pseudocode [outdated]
+### Pseudocode [TODO]
 
 The function that returns a SUS is described below, and it corresponds to `triesus.TrieSus.find_sus()` in the codebase. It is assumed that the following relevant functions or data structures are available: 
 
@@ -82,36 +88,10 @@ The function that returns a SUS is described below, and it corresponds to `tries
 * `end_node_for_word`: function that takes in input a `word` and a `trie`, and returns the node that marks the end of that word in the prefix tree.
 
 ```{bash}
-FUNCTION find_sus(word, trie)
-    sus = []                                                          # Initialize empty list to store SUS
-    word_end_node = end_node_for_word(word)                           # Get the node marking the end of the given word
-    other_end_nodes = []                                              # Get a list of nodes marking the end of the other words
-    FOR node IN trie.end_nodes                                        #   .
-        IF node != word_end_node                                      #   .
-            APPEND node TO other_end_nodes                            #   .
-    IF length of word_end_node.children != 0                          # If word_end_node has children, then we know that the SUS doesn't exist
-        RETURN []                                                     #   .
-    APPEND word_end_node.symbol TO sus                                # The item with the greatest rank in the set will be in the SUS
-    FOR end_node IN other_end_nodes                                   # Visit each other word
-        current_word_node = word_end_node                             # Set pointers to the current
-        current_trie_node = end_node                                  #   nodes being compared
-        WHILE symbol_ranks[current_trie_node.symbol] >= symbol_ranks[current_word_node.symbol]  # Visit and compare further only if the rank of current_trie_node.symbol is >= the rank of current_word_node.symbol. Otherwise, visit the next word
-            IF current_trie_node.symbol == current_word_node.symbol   # If the symbols are the same
-                IF current_word_node.parent.parent == None            # If current_word_node's parent is the root of the trie
-                    RETURN []                                         #   then the SUS doesn't exist
-                ELSE                                                  # Otherwise extend the tentative SUS and visit the parent nodes
-                    current_word_node = current_word_node.parent      # Move up in the word branch
-                    IF current_word_node.symbol NOT IN sus            # If the item is not already in the SUS
-                        APPEND current_word_node.symbol TO sus        #   then add the symbol to the SUS
-            IF current_trie_node.parent.parent != None                # If current_trie_node's parent's is not the root
-                current_trie_node = current_trie_node.parent          #   Then move up to the parent node
-            ELSE                                                      # Otherwise there are no more items left to check in the current word
-                BREAK                                                 # Exit the while loop
-    RETURN sus                                                        # Return the SUS
 ```
 
 ## TODO
 
 - [ ] update pseudocode section
 - [ ] add benchmark
-- [ ] define imports as relative locations with "`.`"
+- [ ] check out and add [SO question](https://stackoverflow.com/questions/48459376/finding-the-unique-subset-of-elements-in-list-of-sets)

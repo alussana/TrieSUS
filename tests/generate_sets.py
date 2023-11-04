@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-# Alessandro Lussana <alussana@ebi.ac.uk>
-
 from triesus.random import *
 
 if __name__ == "__main__":

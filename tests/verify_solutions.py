@@ -1,4 +1,4 @@
-# Alessandro Lussana <alussana@ebi.ac.uk>
+#!/usr/bin/env python3
 
 from triesus.input import *
 
