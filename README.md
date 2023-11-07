@@ -1,10 +1,10 @@
-# TrieSUS
+<p align="center">
+  <img width="372" height="372" src="assets/triesus_logo.png">
+  <br>
+  Find the Smallest Unique Subset (SUS), in linear time
+  <br>
+</p>
 
-## Find the Smallest Unique Subset (SUS)
-
-Given a collection of sets, TrieSUS maps each set to the smallest possible combination of its elements that uniquely identifies the set, in linear time.
-
-For more details about the algorithmic problem and its solution, see the [Algorithm](#algorithm) section.
 
 ## Installation
 
@@ -59,6 +59,8 @@ Note that the SUS for set `4` does not exist.
 
 ## Algorithm
 
+Given a collection of sets, TrieSUS maps each set to the smallest possible combination of its elements that uniquely identifies the set, in linear time.
+
 The algorithmic problem that TrieSUS is intended to solve was discussed in this [StackOverflow question](https://stackoverflow.com/questions/63514798):
 
 > *[...]*
@@ -93,5 +95,6 @@ The function that returns a SUS is described below, and it corresponds to `tries
 ## TODO
 
 - [ ] update pseudocode section
+- [ ] add argparse features to manage input options
 - [ ] add benchmark
-- [ ] check out and add [SO question](https://stackoverflow.com/questions/48459376/finding-the-unique-subset-of-elements-in-list-of-sets)
+- [ ] add another reference [SO question](https://stackoverflow.com/questions/48459376/finding-the-unique-subset-of-elements-in-list-of-sets)
