@@ -1,6 +1,6 @@
 [project]
 name = "triesus"
-version = "0.3.1"
+version = "0.3.2"
 description = "Find the Smallest Unique Subset (SUS)"
 readme = "README.md"
 keywords = ["sets", "algorithm", "trie", "cli"]
@@ -36,3 +36,6 @@ file = "README.md"
 [build-system]
 requires = ["setuptools", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+py-modules = []
