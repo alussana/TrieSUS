@@ -1,16 +1,17 @@
 <p align="center">
-  <img width="372" height="372" src="assets/triesus_logo.png">
+  <img width="372" height="372" src="https://raw.githubusercontent.com/alussana/TrieSUS/7bae8f44d52fe3b4e7a813d237f2a86465c1ac2c/assets/triesus_logo.png">
   <br>
   Find the Smallest Unique Subset (SUS), in linear time
   <br>
 </p>
 
+![Build and publish to PyPI badge](https://github.com/alussana/triesus/actions/workflows/build_and_publish_to_pypi.yml/badge.svg)
 
 ## Installation
 
 ### PyPI
 
-TrieSUS is on the [Python Package Index](https://pypi.org) and can be installed with [pip](https://pip.pypa.io/en/stable/):
+[TrieSUS](https://pypi.org/project/triesus/) is on the [Python Package Index](https://pypi.org) and can be installed with [pip](https://pip.pypa.io/en/stable/):
 
 ```bash
 pip install triesus
