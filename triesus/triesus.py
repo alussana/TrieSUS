@@ -3,6 +3,7 @@
 
 from collections import Counter
 from triesus.trie import *
+from triesus.cover_set import solve_cover_set
 
 
 class TrieSUS(Trie):
@@ -37,6 +38,27 @@ class TrieSUS(Trie):
 
             B[value].add(key)
 
+        return B
+    
+    def transpose_dict(self, A:dict):
+        """
+        Create a new dictionary of sets B, where the keys are the items found in the sets
+        of dictionary A, and the values are the corresponding keys in the dictionary A.
+
+        Parameters:
+        - A (dict): The input dictionary of sets.
+
+        Returns:
+        - dict: The new dictionary of sets B.
+        """
+        B = {}
+    
+        for key, value_set in A.items():
+            for item in value_set:
+                if item not in B:
+                    B[item] = set()
+                B[item].add(key)
+    
         return B
 
     def get_item_counts(self, collection: dict) -> dict:
@@ -157,35 +179,11 @@ class TrieSUS(Trie):
 
             sus_with_candidate_symbols.append(unique_items)
 
-        items_to_include_in_sus = set(
-            [list(i)[0] for i in sus_with_candidate_symbols if len(i) == 1]
-        )
-        items_w_alternative_choices = [
-            i for i in sus_with_candidate_symbols if len(i) > 1
-        ]
-        j = 0
-        for i in range(len(items_w_alternative_choices)):
-            if (
-                len(
-                    items_w_alternative_choices[i - j].intersection(
-                        items_to_include_in_sus
-                    )
-                )
-                > 0
-            ):
-                items_w_alternative_choices.pop(i - j)
-                j = j + 1
-        # rank item in items_w_alternative_choices by frequency
-        # add the most frequent to items_to_include_in_sus
-        # discard all sets in items_w_alternative_choices that have that item
-        # repeat: rank, add, discard, until no more items_w_alternative_choices
-        while len(items_w_alternative_choices) != 0:
-            item = self.find_most_frequent_item(items_w_alternative_choices)
-            items_to_include_in_sus.add(item)
-            j = 0
-            for i in range(len(items_w_alternative_choices)):
-                if item in items_w_alternative_choices[i - j]:
-                    items_w_alternative_choices.pop(i - j)
-                    j = j + 1
+        candidates_dict = {}
+        for i in range(len(sus_with_candidate_symbols)):
+            candidates_dict[i] = sus_with_candidate_symbols[i]
+        sets_to_cover = self.transpose_dict(candidates_dict)
+        
+        sus, status = solve_cover_set(sets_to_cover)
 
-        return list(items_to_include_in_sus)
+        return sus

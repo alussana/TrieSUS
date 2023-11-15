@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="372" height="372" src="https://raw.githubusercontent.com/alussana/TrieSUS/7bae8f44d52fe3b4e7a813d237f2a86465c1ac2c/assets/triesus_logo.png">
+  <img width="356" height="356" src="https://raw.githubusercontent.com/alussana/TrieSUS/7bae8f44d52fe3b4e7a813d237f2a86465c1ac2c/assets/triesus_logo.png">
   <br>
   Find the Smallest Unique Subset (SUS), in linear time
   <br>
@@ -7,9 +7,9 @@
 
 ![Build and publish to PyPI badge](https://github.com/alussana/triesus/actions/workflows/build_and_publish_to_pypi.yml/badge.svg)
 
-## Installation
+# Installation
 
-### PyPI
+## PyPI
 
 [TrieSUS](https://pypi.org/project/triesus/) is on the [Python Package Index](https://pypi.org) and can be installed with [pip](https://pip.pypa.io/en/stable/):
 
@@ -17,20 +17,14 @@
 pip install triesus
 ```
 
-### From source
+## From source
 
 ```bash
 python -m build
 pip install dist/triesus-*.whl --force-reinstall
 ```
 
-### Development
-
-```bash
-pip install -e .
-```
-
-## Usage
+# Usage
 
 Consider the following collection of sets (the first field denotes the set id, the following fields are elements of the set. Fields are tab-separated):
 
@@ -58,7 +52,7 @@ which will print in `STDOUT`:
 
 Note that the SUS for set `4` does not exist.
 
-## Algorithm
+# Algorithm
 
 Given a collection of sets, TrieSUS maps each set to the smallest possible combination of its elements that uniquely identifies the set, in linear time.
 
@@ -77,7 +71,7 @@ This procedure is repeated for every set in the collection.
 
 The same problem also appears in this other [StackExchange question](https://math.stackexchange.com/questions/2436161), where no answer was given at the time of writing.
 
-### Pseudocode [TODO]
+## Pseudocode [TODO]
 
 The function that returns a SUS is described below, and it corresponds to `triesus.TrieSus.find_sus()` in the codebase. It is assumed that the following relevant functions or data structures are available: 
 
@@ -93,9 +87,11 @@ The function that returns a SUS is described below, and it corresponds to `tries
 ```{bash}
 ```
 
-## TODO
+# TODO
 
 - [ ] update pseudocode section
 - [ ] add argparse features to manage input options
 - [ ] add benchmark
-- [ ] add another reference [SO question](https://stackoverflow.com/questions/48459376/finding-the-unique-subset-of-elements-in-list-of-sets)
+- [ ] add another reference [SO question](https://stackoverflow.com/questions/48459376/finding-the-unique-subset-of-elements-in-list-of-sets0)
+- [ ] publish on Conda
+- [ ] add ortools as dependency
