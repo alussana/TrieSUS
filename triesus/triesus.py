@@ -39,8 +39,8 @@ class TrieSUS(Trie):
             B[value].add(key)
 
         return B
-    
-    def transpose_dict(self, A:dict):
+
+    def transpose_dict(self, A: dict):
         """
         Create a new dictionary of sets B, where the keys are the items found in the sets
         of dictionary A, and the values are the corresponding keys in the dictionary A.
@@ -52,13 +52,13 @@ class TrieSUS(Trie):
         - dict: The new dictionary of sets B.
         """
         B = {}
-    
+
         for key, value_set in A.items():
             for item in value_set:
                 if item not in B:
                     B[item] = set()
                 B[item].add(key)
-    
+
         return B
 
     def get_item_counts(self, collection: dict) -> dict:
@@ -156,7 +156,7 @@ class TrieSUS(Trie):
             # the SUS doesn't exist, terminate here
             return []
 
-        sus_with_candidate_symbols = []  # list of sets
+        candidate_symbols = []  # list of sets
 
         for end_node in other_end_nodes:
             current_word_node = word_end_node
@@ -177,13 +177,13 @@ class TrieSUS(Trie):
             if len(unique_items) == 0:
                 return []
 
-            sus_with_candidate_symbols.append(unique_items)
+            candidate_symbols.append(unique_items)
 
         candidates_dict = {}
-        for i in range(len(sus_with_candidate_symbols)):
-            candidates_dict[i] = sus_with_candidate_symbols[i]
+        for i in range(len(candidate_symbols)):
+            candidates_dict[i] = candidate_symbols[i]
         sets_to_cover = self.transpose_dict(candidates_dict)
-        
+
         sus, status = solve_cover_set(sets_to_cover)
 
         return sus

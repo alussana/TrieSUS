@@ -15,7 +15,13 @@ def solve_cover_set(input_sets):
 
     # Create constraints to cover all elements with the selected sets
     for element in set.union(*input_sets.values()):
-        model.AddBoolOr([set_vars[set_name] for set_name, element_set in input_sets.items() if element in element_set])
+        model.AddBoolOr(
+            [
+                set_vars[set_name]
+                for set_name, element_set in input_sets.items()
+                if element in element_set
+            ]
+        )
 
     # Create the objective to minimize the number of selected sets
     objective = sum(set_vars.values())
@@ -25,6 +31,8 @@ def solve_cover_set(input_sets):
     status = solver.Solve(model)
 
     # Get the selected sets
-    selected_sets = [set_name for set_name, var in set_vars.items() if solver.Value(var) == 1]
+    selected_sets = [
+        set_name for set_name, var in set_vars.items() if solver.Value(var) == 1
+    ]
 
     return selected_sets, status

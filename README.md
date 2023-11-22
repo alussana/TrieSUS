@@ -1,7 +1,7 @@
 <p align="center">
-  <img width="356" height="356" src="https://raw.githubusercontent.com/alussana/TrieSUS/7bae8f44d52fe3b4e7a813d237f2a86465c1ac2c/assets/triesus_logo.png">
+  <img width="312" height="312" src="https://raw.githubusercontent.com/alussana/TrieSUS/7bae8f44d52fe3b4e7a813d237f2a86465c1ac2c/assets/triesus_logo.png">
   <br>
-  Find the Smallest Unique Subset (SUS), in linear time
+  Find the Smallest Unique Subset (SUS), fast
   <br>
 </p>
 
@@ -11,8 +11,6 @@
 
 ## PyPI
 
-[TrieSUS](https://pypi.org/project/triesus/) is on the [Python Package Index](https://pypi.org) and can be installed with [pip](https://pip.pypa.io/en/stable/):
-
 ```bash
 pip install triesus
 ```
@@ -21,12 +19,12 @@ pip install triesus
 
 ```bash
 python -m build
-pip install dist/triesus-*.whl --force-reinstall
+pip install dist/triesus-*.whl
 ```
 
 # Usage
 
-Consider the following collection of sets (the first field denotes the set id, the following fields are elements of the set. Fields are tab-separated):
+Consider the following collection of sets. The first field denotes the set id, the following fields include the elements of the set. Fields are tab-separated:
 
 ```
 1       C
@@ -35,13 +33,13 @@ Consider the following collection of sets (the first field denotes the set id, t
 4       A       D
 ```
 
-The Smallest Unique Subset (SUS) for each set in this collection can be found running 
+The smallest unique subset (SUS) for each set in this collection can be found running:
 
 ```
 triesus tests/examples/sets2.tsv
 ```
 
-which will print in `STDOUT`:
+This will print in `STDOUT`:
 
 ```
 1       C
@@ -52,46 +50,43 @@ which will print in `STDOUT`:
 
 Note that the SUS for set `4` does not exist.
 
+# Performance
+
+Below it's displayed the performance of TrieSUS compared with the [brute force baseline](#brute-force-approach) on randomly generated set collections. This analysis can be reproduced by cloning the [TrieSUS benchmark repository](https://github.com/alussana/TrieSUS-benchmark).
+
+<p align="center">
+  <br>
+  <img width="900" height="" src="triesus/assets/benchmark.svg">
+  <br>
+</p>
+
+The input size parameter is a number corresponding to three quantities: the number of sets in the collection, the number of items in the universe, and the maximum number of items in each set.
+
 # Algorithm
 
-Given a collection of sets, TrieSUS maps each set to the smallest possible combination of its elements that uniquely identifies the set, in linear time.
+Given a collection of sets, TrieSUS maps each set to the smallest possible combination of its elements that uniquely identifies the set, here called a smallest unique subset, or SUS.
 
-The algorithmic problem that TrieSUS is intended to solve was discussed in this [StackOverflow question](https://stackoverflow.com/questions/63514798):
+## Brute force approach
 
-> *[...]*
-> 
->  I have multiple sets with elements that are unique within each set, but may not be unique across all sets. How can I find the smallest possible subset of each set such that each subset is unique?
->
-> *[...]*
+To find the SUS of a set, a naive brute force approach would involve enumerating all non-empty subsets of the set, from the smallest to the largest, until finding one that is a solution, i.e. that is not a subset of any other set in the collection. This approach, even after taking some relatively obvious precautions such as making sure that potential solutions containing the least frequent elements in the collection are tested first, scales very badly with input size (see [Performance](#performance)). In fact, it has exponential time complexity of $O(2^n*m)$, where $n$ is the number of elements in each set (assuming all sets have equal size) and $m$ is the number of sets in the collection.
 
-A solution was proposed to find the SUS of a set `s` by first counting how many times each element in `s` appears in the other sets. It then sorts the elements in `s` based on this count, and considers all possible sub-arrays of `s`, returning the first one that satisfies the condition that it appears in exactly one set in the collection. If no such subset is found, the function returns `null`.
+## TrieSUS
+
+TrieSUS implements a series of linear-time operations to first greatly reduce the problem size, and to eventually transform it into the equivalent of a [set cover problem](https://en.wikipedia.org/wiki/Set_cover_problem). The set cover is an [NP-hard](https://en.wikipedia.org/wiki/NP-hardness) problem, but because of the extremely reduced size of the input it will be easily treatable. TrieSUS uses Google's [OR-Tools](https://developers.google.com/optimization) to solve it.
+
+The algorithm starts by first ranking all the elements found in the sets of the collection from the most frequent to the least frequent, and sorting the elements in the sets according to these ranks. Each set is then treated as a sorted list to build a prefix tree (trie), where each leaf corresponds to a set. The construction of such a trie is not a strictly necessary step, but it may have advantages depending on the specific input. It can marginally reduce the number of operations in the following steps and it allows to immediately identify sets of the collection for which a solution doesn't exist, i.e. sets that don't have a SUS. Regardless, the construction of the trie is linear in time complexity and therefore doesn't significantly impact the performance of the algorithm.
+
+The main part of the algorithm then performs a series of operations on the trie to find a SUS, if it exists, for each one of the sets, as implemented in [`TrieSUS.find_sus()`]().
+
+[...]
+
+## The unique subset problem in the wild
+
+The algorithmic problem that TrieSUS is intended to solve is discussed in several occasions, of which some are highlighted here:
+
+* In this [Stack Overflow question](https://stackoverflow.com/questions/63514798) (Aug 21, 2020), a solution was proposed to find the SUS of a set `s` by first counting how many times each element in `s` appears in the other sets. It then sorts the elements in `s` based on this count, and considers all possible sub-arrays of `s`, returning the first one that satisfies the condition that it appears in exactly one set in the collection. If no such subset is found, the function returns `null`.
 This procedure is repeated for every set in the collection.
 
-`TrieSUS` adopts a different approach: it first ranks all the elements found in the sets of the collection from the most frequent to the least frequent. Then, it sorts the elements in the sets according to those ranks. Each set is then treated as a sorted list to build a prefix tree. Finally, for each set an efficient procedure (see [Pseudocode](#pseudocode)) that uses the prefix tree is followed to 1) determine whether a SUS exists, and 2) if appropriate, return a SUS.
+* The same problem also appears in this [Stack Exchange question](https://math.stackexchange.com/questions/2436161) (Sep 19, 2017), where no answer was given at the time of writing.
 
-The same problem also appears in this other [StackExchange question](https://math.stackexchange.com/questions/2436161), where no answer was given at the time of writing.
-
-## Pseudocode [TODO]
-
-The function that returns a SUS is described below, and it corresponds to `triesus.TrieSus.find_sus()` in the codebase. It is assumed that the following relevant functions or data structures are available: 
-
-* `word`: list of strings. The items (symbols) of the set for which we want to find the smallest unique subset.
-* `symbol_ranks`: dictionary mapping each key to its corresponding rank. The item (symbol) occurring most frequently in the sets of the collection is given rank `1`.
-* `trie`: a prefix tree
-  * `end_nodes`: attribute of `trie`. List of nodes that mark the end of the words in the prefix tree.
-  * Each node in `trie` has the following attributes:
-    * `symbol`: a string. An item found in the the collection of sets
-    * `parent`: the parent node of the node in the prefix tree
-* `end_node_for_word`: function that takes in input a `word` and a `trie`, and returns the node that marks the end of that word in the prefix tree.
-
-```{bash}
-```
-
-# TODO
-
-- [ ] update pseudocode section
-- [ ] add argparse features to manage input options
-- [ ] add benchmark
-- [ ] add another reference [SO question](https://stackoverflow.com/questions/48459376/finding-the-unique-subset-of-elements-in-list-of-sets0)
-- [ ] publish on Conda
-- [ ] add ortools as dependency
+* The code implementing a brute force approach that compares all the powersets was shared in an answer to this [Stack Overflow question](https://stackoverflow.com/questions/48459376/finding-the-unique-subset-of-elements-in-list-of-sets0) (Jan 26, 2018).
