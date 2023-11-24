@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="312" height="312" src="https://raw.githubusercontent.com/alussana/TrieSUS/7bae8f44d52fe3b4e7a813d237f2a86465c1ac2c/assets/triesus_logo.png">
+  <img width="312" height="312" src="https://i.imgur.com/uGRbTRH.png">
   <br>
   Find the Smallest Unique Subset (SUS), fast
   <br>
@@ -56,7 +56,7 @@ Below it's displayed the performance of TrieSUS compared with the [brute force b
 
 <p align="center">
   <br>
-  <img width="900" height="" src="triesus/assets/benchmark.svg">
+  <img width="900" height="" src="https://i.imgur.com/koe4Zut.png">
   <br>
 </p>
 
@@ -76,9 +76,36 @@ TrieSUS implements a series of linear-time operations to first greatly reduce th
 
 The algorithm starts by first ranking all the elements found in the sets of the collection from the most frequent to the least frequent, and sorting the elements in the sets according to these ranks. Each set is then treated as a sorted list to build a prefix tree (trie), where each leaf corresponds to a set. The construction of such a trie is not a strictly necessary step, but it may have advantages depending on the specific input. It can marginally reduce the number of operations in the following steps and it allows to immediately identify sets of the collection for which a solution doesn't exist, i.e. sets that don't have a SUS. Regardless, the construction of the trie is linear in time complexity and therefore doesn't significantly impact the performance of the algorithm.
 
-The main part of the algorithm then performs a series of operations on the trie to find a SUS, if it exists, for each one of the sets, as implemented in [`TrieSUS.find_sus()`]().
+The main part of the algorithm then performs a series of operations on the trie to find a SUS, if it exists, for each one of the sets, as implemented in `TrieSUS.find_sus()`. This method leverages the trie structure to efficiently track unique symbols among different words and applies a cover set solution to determine the smallest set of symbols that cover these unique items across different subsets within the trie.
 
-[...]
+Here's a high-level breakdown of the steps taken within the find_sus() method to identify the SUS for a set, here represented by a given "word" of ordered symbols:
+
+1. Identify the end node for the Given Word:
+    * Determine the end node within the trie structure that represents the given word.
+
+2. Gather the other end nodes:
+    * Collect all other end nodes within the trie that don't represent the given word. These nodes correspond to other words (sets) stored in the trie.
+
+3. Check conditions for SUS existence: 
+    * Verify conditions to determine if a SUS exists for the given word:
+      * If the end node of the given word has children or if there's more than one identical word in the trie, then a SUS doesn't exist. The method returns an empty list in this case.
+
+4. Identify unique symbols for each other end node:
+    * For each of the other end nodes collected earlier:
+      * Trace back from the end node of the given word to the common ancestor node shared with the other end node
+      * Along this path, collect symbols unique to the given word that are not present in the other word.
+
+5. Assemble candidate symbols:
+    * Compile the sets of unique symbols obtained from the previous step into a list of sets.
+
+6. Construct a dictionary of sets to cover:
+    * Transform the list of sets into a dictionary where keys are items (symbols) of the sets and values are indexes of the sets. This prepares the data structure to solve the cover set problem. Finding the cover set on the indexes ensures that a minimum amount of candidate unique symbols is used to discriminate the given set from all the other sets of the collection.
+
+7. Solve the cover set problem:
+    * Use the OR-Tools constraint programming solver to find a solution. The solution [...] is a SUS of the given set.
+
+8. Return the result:
+    * Return the identified SUS or an empty list if no unique subset satisfying the conditions is identified.
 
 ## The unique subset problem in the wild
 
