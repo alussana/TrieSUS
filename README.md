@@ -7,6 +7,10 @@
 
 ![Build and publish to PyPI badge](https://github.com/alussana/triesus/actions/workflows/build_and_publish_to_pypi.yml/badge.svg)
 
+> Current version: `0.5.2`
+>
+> Please note that this software is still in development. It is supposed to work as intended in the current state and you are welcome to use it. The main changes expected before version `1.0.0` should involve documentation, code cleanup, and more flexible input options.
+
 # Installation
 
 ## PyPI
@@ -68,19 +72,19 @@ Given a collection of sets, TrieSUS maps each set to the smallest possible combi
 
 ## Brute force approach
 
-To find the SUS of a set, a naive brute force approach would involve enumerating all non-empty subsets of the set, from the smallest to the largest, until finding one that is a solution, i.e. that is not a subset of any other set in the collection. This approach, even after taking some relatively obvious precautions such as making sure that potential solutions containing the least frequent elements in the collection are tested first, scales very badly with input size (see [Performance](#performance)). In fact, it has exponential time complexity of $O(2^n*m)$, where $n$ is the number of elements in each set (assuming all sets have equal size) and $m$ is the number of sets in the collection.
+To find the SUS of a set, a naive brute force approach would involve enumerating the non-empty subsets of the set from the smallest to the largest (for example using the [Gosper's Hack](https://read.seas.harvard.edu/~kohler/class/cs207-s12/lec12.html), as implemented in `naive_sus.find_sus()`), until finding one that is a solution, *i.e.* that is not a subset of any other set in the collection. This approach, even after taking some relatively obvious precautions such as making sure that potential solutions containing the least frequent elements in the collection are tested first, scales very badly with input size (see [Performance](#performance)). In fact, it has exponential time complexity of $O(2^n*m)$, where $n$ is the number of elements in each set (assuming all sets have equal size) and $m$ is the number of sets in the collection.
 
 ## TrieSUS
 
-TrieSUS implements a series of linear-time operations to first greatly reduce the problem size, and to eventually transform it into the equivalent of a [set cover problem](https://en.wikipedia.org/wiki/Set_cover_problem). The set cover is an [NP-hard](https://en.wikipedia.org/wiki/NP-hardness) problem, but because of the extremely reduced size of the input it will be easily treatable. TrieSUS uses Google's [OR-Tools](https://developers.google.com/optimization) to solve it.
+TrieSUS implements a series of linear-time operations to first greatly reduce the problem size, and to eventually transform it into the equivalent of a [set cover problem](https://en.wikipedia.org/wiki/Set_cover_problem). The set cover is an [NP-hard](https://en.wikipedia.org/wiki/NP-hardness) problem, but because of the reduced size of the input it will be treatable. TrieSUS uses Google's [OR-Tools](https://developers.google.com/optimization) constraint programming to solve it.
 
 The algorithm starts by first ranking all the elements found in the sets of the collection from the most frequent to the least frequent, and sorting the elements in the sets according to these ranks. Each set is then treated as a sorted list to build a prefix tree (trie), where each leaf corresponds to a set. The construction of such a trie is not a strictly necessary step, but it may have advantages depending on the specific input. It can marginally reduce the number of operations in the following steps and it allows to immediately identify sets of the collection for which a solution doesn't exist, i.e. sets that don't have a SUS. Regardless, the construction of the trie is linear in time complexity and therefore doesn't significantly impact the performance of the algorithm.
 
-The main part of the algorithm then performs a series of operations on the trie to find a SUS, if it exists, for each one of the sets, as implemented in `TrieSUS.find_sus()`. This method leverages the trie structure to efficiently track unique symbols among different words and applies a cover set solution to determine the smallest set of symbols that cover these unique items across different subsets within the trie.
+The main part of the algorithm then performs a series of operations on the trie to find a SUS, if it exists, for each one of the sets, as implemented in `triesus.TrieSUS.find_sus()`. This method leverages the trie structure to efficiently track unique symbols among different words and applies a cover set solution to determine the smallest set of symbols that cover these unique items across different subsets within the trie.
 
-Here's a high-level breakdown of the steps taken within the find_sus() method to identify the SUS for a set, here represented by a given "word" of ordered symbols:
+The following is a high-level breakdown of the steps taken within the `find_sus()` method to identify the SUS for a set, here represented by a given "word" of ordered symbols:
 
-1. Identify the end node for the Given Word:
+1. Identify the end node for the given word:
     * Determine the end node within the trie structure that represents the given word.
 
 2. Gather the other end nodes:
