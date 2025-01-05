@@ -3,7 +3,7 @@
 
 from collections import Counter
 from triesus.trie import *
-from triesus.cover_set import solve_cover_set
+from triesus.cover_set import *
 
 
 class TrieSUS(Trie):
@@ -147,7 +147,7 @@ class TrieSUS(Trie):
 
         return node
 
-    def find_sus(self, word):
+    def find_sus(self, word, extended: bool = False):
         word_end_node = self.end_node_for_word(word)
         other_end_nodes = [node for node in self.end_nodes if node != word_end_node]
 
@@ -184,6 +184,9 @@ class TrieSUS(Trie):
             candidates_dict[i] = candidate_symbols[i]
         sets_to_cover = self.transpose_dict(candidates_dict)
 
-        sus, status = solve_cover_set(sets_to_cover)
+        if extended:
+            sus, status = solve_cover_set_all_optima(sets_to_cover)
+        else:
+            sus, status = solve_cover_set(sets_to_cover)
 
         return sus

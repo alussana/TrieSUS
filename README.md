@@ -7,7 +7,7 @@
 
 ![Build and publish to PyPI badge](https://github.com/alussana/triesus/actions/workflows/build_and_publish_to_pypi.yml/badge.svg)
 
-> Current version: `0.5.2`
+> Current version: `0.6.0`
 >
 > Please note that this software is still in development. It is supposed to work as intended in the current state and you are welcome to use it. The main changes expected before version `1.0.0` should involve documentation, code cleanup, and more flexible input options.
 
@@ -106,7 +106,7 @@ The following is a high-level breakdown of the steps taken within the `find_sus(
     * Transform the list of sets into a dictionary where keys are items (symbols) of the sets and values are indexes of the sets. This prepares the data structure to solve the cover set problem. Finding the cover set on the indexes ensures that a minimum amount of candidate unique symbols is used to discriminate the given set from all the other sets of the collection.
 
 7. Solve the cover set problem:
-    * Use the OR-Tools constraint programming solver to find a solution. The solution [...] is a SUS of the given set.
+    * Use the OR-Tools constraint programming solver to find the solution(s), corresponding to SUS of the given set.
 
 8. Return the result:
     * Return the identified SUS or an empty list if no unique subset satisfying the conditions is identified.
