@@ -35,7 +35,7 @@ def parse_triesus_args():
         "-v",
         "--version",
         action="version",
-        version="v0.6.0",
+        version="v0.6.1",
         help="Print package version and exit",
     )
     args = parser.parse_args()
@@ -52,7 +52,7 @@ def main():
      ██║   ██║  ██║██║███████╗███████║╚██████╔╝███████║
      ╚═╝   ╚═╝  ╚═╝╚═╝╚══════╝╚══════╝ ╚═════╝ ╚══════╝
   
-  Version 0.6.0
+  Version 0.6.1
   Copyright (C) 2025 Alessandro Lussana
   MIT License
   
