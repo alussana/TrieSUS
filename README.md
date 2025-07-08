@@ -95,7 +95,13 @@ Below it is displayed the performance of TrieSUS compared with the [brute force 
 
 <p align="center">
   <br>
-  <img width="900" height="" src="https://i.imgur.com/koe4Zut.png">
+  <img width="800" height="" src="https://i.imgur.com/f3JsxRl.png">
+  <br>
+</p>
+
+<p align="center">
+  <br>
+  <img width="800" height="" src="https://i.imgur.com/NXyQ9pz.png">
   <br>
 </p>
 
