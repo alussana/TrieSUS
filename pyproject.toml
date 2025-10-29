@@ -1,6 +1,6 @@
 [project]
 name = "triesus"
-version = "0.6.1"
+version = "0.7.0"
 description = "Find the Smallest Unique Subset (SUS), fast"
 readme = "README.md"
 keywords = ["sets", "algorithm", "trie", "cli"]

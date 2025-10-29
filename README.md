@@ -1,15 +1,12 @@
 <p align="center">
-  <img width="312" height="312" src="https://i.imgur.com/uGRbTRH.png">
-  <br>
+  <img width="256" src="https://github.com/alussana/TrieSUS/blob/main/triesus/assets/logo.png?raw=true">
+  <br><br>
   Find the Smallest Unique Subset (SUS), fast
   <br>
 </p>
 
 ![Build and publish to PyPI badge](https://github.com/alussana/triesus/actions/workflows/build_and_publish_to_pypi.yml/badge.svg)
-
-> Current version: `0.6.1`
->
-> Please note that this software is still in development. It is supposed to work as intended in the current state and you are welcome to use it. The main changes expected before version `1.0.0` should involve documentation, code cleanup, and more flexible input options.
+![Version](https://img.shields.io/badge/version-0.7.0-blue)
 
 # Installation
 
